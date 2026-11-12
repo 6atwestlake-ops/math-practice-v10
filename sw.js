@@ -1,5 +1,5 @@
 /* Math Practice — offline service worker (cache-first) */
-var CACHE = 'mp10-v2';
+var CACHE = 'mp10-v3';
 var ASSETS = [
   './',
   './index.html',

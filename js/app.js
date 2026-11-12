@@ -130,10 +130,11 @@
   }
 
   function beginGuest() {
-    pendingProfileId = 'guest';
+    /* v10: Guest gets the same set list and Review button as Cole */
+    pendingProfileId = null;
     if ($('pinPanel')) $('pinPanel').style.display = 'none';
-    fillGuestLevels();
-    if ($('guestSetup')) $('guestSetup').style.display = 'block';
+    if ($('guestSetup')) $('guestSetup').style.display = 'none';
+    enterProfile('guest');
   }
 
   var COLE_LEVEL_KEY = 'coleMathColeLevel';
@@ -280,7 +281,7 @@
         if (p.id === 'taya') {
           $('homeBlurb').textContent = 'About 30 questions: times tables, division, decimals, fractions, and rectangle perimeter/area.';
         } else if (p.id === 'guest') {
-          $('homeBlurb').textContent = '50 questions at Level ' + savedLevel('guest') + ' on the Grade 5 to 9 path (' + (window.ColeMathGuest ? ColeMathGuest.describe(savedLevel('guest')) : '') + ').';
+          $('homeBlurb').textContent = '50 questions per set, new ones every time. Sets 1–4 are facts, then Grade 5 to 9 work. Tap any set to start, or review the questions and answers first.';
         } else if (p.setId === 'guest') {
           $('homeBlurb').textContent = '50 questions per set. Sets 1–4 are 6×6 to 10×10 facts and division, then Grade 5 to 9 work. Tap any set to start. Your best first-try score shows on each.';
         } else {
@@ -288,7 +289,7 @@
         }
       }
       if ($('homeLevelWrap')) {
-        var showLv = p.setId === 'guest' && p.id !== 'guest';
+        var showLv = p.setId === 'guest';
         $('homeLevelWrap').style.display = showLv ? 'block' : 'none';
         if ($('startBtn')) $('startBtn').style.display = showLv ? 'none' : '';
         if (showLv) renderSetList(p.id);
