@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Math v10">
+  <meta name="theme-color" content="#1a5f9e">
+  <meta name="description" content="Offline daily math practice for Cole and Taya">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <title>Math Practice v10</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="appbar">
+    <h1 id="appTitle">Math Practice</h1>
+    <div class="meta" id="streakHud"></div>
+  </header>
+  <nav class="tabs">
+    <button type="button" id="tab-home" class="active">Home</button>
+    <button type="button" id="tab-practice">Practice</button>
+    <button type="button" id="tab-progress">Progress</button>
+  </nav>
+
+  <main>
+    <section id="screen-profiles" class="screen active">
+      <div class="install-tip">
+        On iPhone: Safari → Share → <strong>Add to Home Screen</strong>. Works offline after that.
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0">Who’s practising?</h2>
+        <div id="profileList"></div>
+        <div id="pinPanel" style="display:none;margin-top:16px">
+          <h3 id="pinTitle">PIN</h3>
+          <input id="pinInput" type="tel" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off" placeholder="••••" class="pin-input" aria-label="4-digit PIN">
+          <p class="hint" id="pinHint"></p>
+          <button class="btn" id="pinSubmit" type="button">Continue</button>
+          <button class="btn secondary" id="pinCancel" type="button">Cancel</button>
+        </div>
+        <div id="guestSetup" style="display:none;margin-top:16px">
+          <h3 style="margin-top:0">Guest practice</h3>
+          <p class="hint">Pick a level from 1 to 20. Levels follow a Grade 5 to Grade 9 path: facts → Grade 6/7 → Grade 8 → Grade 9.</p>
+          <label class="field-label" for="guestLevel">Level</label>
+          <select id="guestLevel" class="select-field" aria-label="Level 1 to 20">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+            <option value="5">Level 5</option>
+            <option value="6">Level 6</option>
+            <option value="7">Level 7</option>
+            <option value="8">Level 8</option>
+            <option value="9">Level 9</option>
+            <option value="10">Level 10</option>
+            <option value="11">Level 11</option>
+            <option value="12">Level 12</option>
+            <option value="13">Level 13</option>
+            <option value="14">Level 14</option>
+            <option value="15">Level 15</option>
+            <option value="16">Level 16</option>
+            <option value="17">Level 17</option>
+            <option value="18">Level 18</option>
+            <option value="19">Level 19</option>
+            <option value="20">Level 20</option>
+          </select>
+          <p class="hint" id="guestLevelDesc"></p>
+          <button class="btn" id="guestStartBtn" type="button">Start practising</button>
+          <button class="btn secondary" id="guestCancelBtn" type="button">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-home" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0" id="homeTitle">Today’s set</h2>
+        <p id="homeBlurb">Daily math practice.</p>
+        <p>Get <strong>5 correct in a row</strong> to unlock a short mini-game break.</p>
+        <div id="homeLevelWrap" style="display:none">
+          <div id="setList" class="set-list"></div>
+        </div>
+        <button class="btn" id="startBtn" type="button">Start today’s set</button>
+        <button class="btn secondary" id="switchProfileBtn" type="button">Switch profile</button>
+        <p class="hint">Works fully offline. Progress stays on this phone per profile.</p>
+      </div>
+    </section>
+
+    <section id="screen-practice" class="screen">
+      <div class="card practice-card">
+        <div class="mini-btns"><button type="button" id="sketchBtn" class="clear-marks-btn" aria-label="Open sketch page">Sketch</button><button type="button" id="clearMarksBtn" class="clear-marks-btn" aria-label="Clear marks">Clear</button></div>
+        <span class="type-tag" id="typeTag">Multiplication</span>
+        <div class="progress-bar"><span id="barFill"></span></div>
+        <div class="stats-row">
+          <span id="qCount">1 / 50</span>
+          <span>Type or draw</span>
+        </div>
+        <div class="prompt" id="prompt">8 × 7</div>
+        <div class="answer-area">
+          <div class="answer-row">
+            <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
+            <button id="remBtn" type="button" aria-label="Remainder r" title="Remainder">r</button>
+            <input id="answerInput" type="text" inputmode="text" size="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+          </div>
+          <button id="submitBtn" type="button">Go</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="skip-btn small-skip" id="skipBtn" type="button">Skip</button>
+        <p class="hint">Remainders: type <code>quotient r remainder</code>. Fractions: <code>a/b</code>. Tap Sketch for a full page to work it out.</p>
+      </div>
+    </section>
+
+    <section id="screen-progress" class="screen">
+      <div id="progressRoot"></div>
+    </section>
+
+    <section id="screen-dashboard" class="screen">
+      <div id="dashboardRoot"></div>
+    </section>
+
+    <section id="screen-summary" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0">Set complete</h2>
+        <div id="summaryBody"></div>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="drawCanvas" aria-hidden="true"></canvas>
+
+  <div id="sketchWrap">
+    <div class="sketch-top">
+      <div id="sketchQ"></div>
+      <div class="sketch-actions">
+        <button type="button" id="sketchClearBtn">Clear</button>
+        <button type="button" id="sketchReturnBtn">Return to question</button>
+      </div>
+    </div>
+    <div id="sketchPad"><canvas id="sketchCanvas"></canvas></div>
+  </div>
+
+  <div id="gameWrap">
+    <div id="gamePlayPanel">
+      <h2>Reward break!</h2>
+      <p style="margin:0 0 8px;opacity:0.85">Drag to dodge the red blobs — 30 seconds</p>
+      <canvas id="gameCanvas" width="360" height="480"></canvas>
+      <div id="gameHud">Get ready…</div>
+      <button class="btn secondary" id="gameSkipBtn" type="button" style="max-width:420px;margin-top:12px">Skip</button>
+    </div>
+    <div id="gameScorePanel" style="display:none;max-width:420px;width:100%;text-align:center">
+      <h2 style="margin-top:0">Round over</h2>
+      <div class="summary-grid" style="margin-bottom:12px">
+        <div class="stat" style="grid-column:1 / -1"><div class="n" id="gameScoreValue">0</div><div class="l">Score</div></div>
+      </div>
+      <p id="gameScoreMsg" style="opacity:0.9">Nice work! Want to try again?</p>
+      <button class="btn" id="gameRetryBtn" type="button">Try again</button>
+      <button class="btn secondary" id="gameBackBtn" type="button">Back to math</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/profiles.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/sync.js"></script>
+  <script src="js/questions/set1.js"></script>
+  <script src="js/questions/taya.js"></script>
+  <script src="js/questions/guest.js"></script>
+  <script src="js/questions/index.js"></script>
+  <script src="js/bank.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/draw.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
