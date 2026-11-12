@@ -69,6 +69,7 @@
           </select>
           <p class="hint" id="guestLevelDesc"></p>
           <button class="btn" id="guestStartBtn" type="button">Start practising</button>
+          <button class="btn secondary" id="guestReviewBtn" type="button">Review questions and answers</button>
           <button class="btn secondary" id="guestCancelBtn" type="button">Cancel</button>
         </div>
       </div>
@@ -83,6 +84,7 @@
           <div id="setList" class="set-list"></div>
         </div>
         <button class="btn" id="startBtn" type="button">Start today’s set</button>
+        <button class="btn secondary" id="reviewBtn" type="button">Review questions and answers</button>
         <button class="btn secondary" id="switchProfileBtn" type="button">Switch profile</button>
         <p class="hint">Works fully offline. Progress stays on this phone per profile.</p>
       </div>
@@ -110,6 +112,11 @@
         <button class="skip-btn small-skip" id="skipBtn" type="button">Skip</button>
         <p class="hint">Remainders: type <code>quotient r remainder</code>. Fractions: <code>a/b</code>. Tap Sketch for a full page to work it out.</p>
       </div>
+    </section>
+
+    <section id="screen-review" class="screen">
+      <div id="reviewRoot"></div>
+      <button class="btn secondary" id="reviewBackBtn" type="button">Back</button>
     </section>
 
     <section id="screen-progress" class="screen">
@@ -160,6 +167,7 @@
     </div>
   </div>
 
+  <script src="js/fmt.js"></script>
   <script src="js/config.js"></script>
   <script src="js/profiles.js"></script>
   <script src="js/storage.js"></script>
@@ -170,6 +178,7 @@
   <script src="js/questions/index.js"></script>
   <script src="js/bank.js"></script>
   <script src="js/progress.js"></script>
+  <script src="js/review.js"></script>
   <script src="js/dashboard.js"></script>
   <script src="js/draw.js"></script>
   <script src="js/game.js"></script>

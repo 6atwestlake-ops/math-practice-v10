@@ -86,7 +86,7 @@
       id: row.id,
       set: setNo,
       type: row.type || 'mixed',
-      label: (LABELS[row.type] || row.type || 'Question') + ' \u00b7 Set ' + setNo,
+      label: (LABELS[row.type] || (row.type ? String(row.type).replace(/([a-z])([A-Z0-9])/g, '$1 $2').toLowerCase().replace(/^./, function (c) { return c.toUpperCase(); }) : 'Question')) + ' \u00b7 Set ' + setNo,
       prompt: row.prompt,
       hint: row.hint || '',
       answer: row.answer,

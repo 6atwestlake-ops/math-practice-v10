@@ -69,6 +69,7 @@
 
   function showProfilePicker() {
     ColeMathProfiles.clearActive();
+    if ($('reviewRoot')) $('reviewRoot').innerHTML = '';
     clearTimers();
     state.sessionId = 0;
     closeSketch();
@@ -322,7 +323,7 @@
     state.wrongTries = q._wrong;
     $('typeTag').textContent = q.label || q.type;
     var prompt = $('prompt');
-    prompt.textContent = q.prompt + (q.hint ? '\n' + q.hint : '');
+    ColeMathFmt.set(prompt, q.prompt + (q.hint ? '\n' + q.hint : ''));
     prompt.className = 'prompt' + (q.promptClass ? ' ' + q.promptClass : '');
     $('answerInput').value = '';
     $('feedback').textContent = q._skips ? 'Skipped once. Skip again to leave it.' : '';
@@ -425,7 +426,7 @@
       if (!arr.length) return;
       var h = document.createElement('h4'); h.textContent = title; lists.appendChild(h);
       var ul = document.createElement('ul'); ul.className = 'hist-list';
-      arr.forEach(function (q) { var li = document.createElement('li'); var a = document.createElement('span'); a.textContent = q.prompt.replace(/\n/g, ' '); var b = document.createElement('span'); b.textContent = answerText(q); li.appendChild(a); li.appendChild(b); ul.appendChild(li); });
+      arr.forEach(function (q) { var li = document.createElement('li'); var a = document.createElement('span'); ColeMathFmt.set(a, q.prompt.replace(/\n/g, ' ')); var b = document.createElement('span'); b.textContent = answerText(q); li.appendChild(a); li.appendChild(b); ul.appendChild(li); });
       lists.appendChild(ul);
     }
     addList('Missed after 3 tries', state.missedThree);
@@ -538,7 +539,7 @@
   function openSketch() {
     var q = currentQ();
     if (!q) return;
-    $('sketchQ').textContent = q.prompt.replace(/\n/g, '  ');
+    ColeMathFmt.set($('sketchQ'), q.prompt.replace(/\n/g, '  '));
     $('sketchWrap').className = 'active';
     if (window.ColeMathDraw) ColeMathDraw.setEnabled(false);
     sketchSize();
@@ -577,8 +578,27 @@
     $('sketchReturnBtn').onclick = closeSketch;
   }
 
+  function openReview() {
+    var p = ColeMathProfiles.getActive();
+    if (!p) return;
+    var who = p.id === 'cole' ? 'cole' : (p.setId === 'guest' ? 'guest' : 'taya');
+    ColeMathReview.mount($('reviewRoot'), who, who === 'taya' ? 1 : savedLevel(p.id));
+    showScreen('review');
+    window.scrollTo(0, 0);
+  }
+
   function bind() {
     bindSketch();
+    $('reviewBtn').onclick = openReview;
+    $('guestReviewBtn').onclick = function () {
+      var sel = $('guestLevel'), level = sel ? parseInt(sel.value, 10) : 10;
+      if (!(level >= 1 && level <= 20)) level = 10;
+      try { localStorage.setItem(GUEST_LEVEL_KEY, String(level)); } catch (e2) {}
+      if ($('guestSetup')) $('guestSetup').style.display = 'none';
+      enterProfile('guest');
+      openReview();
+    };
+    $('reviewBackBtn').onclick = function () { $('reviewRoot').innerHTML = ''; showScreen('home'); };
     $('tab-home').onclick = function () {
       var p = ColeMathProfiles.getActive();
       if (!p) return showProfilePicker();

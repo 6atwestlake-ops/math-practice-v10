@@ -107,17 +107,10 @@
     });
 
     html += renderBestAndSkips();
-    html += '<div class="card" style="margin-bottom:14px"><h3 style="margin-top:0">Review a set</h3>' +
-      '<p class="hint" style="text-align:left">Look through any set. Tap a question to show its answer. Nothing here counts as practice.</p>' +
-      '<label class="field-label" for="revWho">Questions for</label>' +
-      '<select id="revWho" class="select-field"><option value="cole">Cole (from your Sheet)</option><option value="guest">Guest (sample, new each time)</option></select>' +
-      '<label class="field-label" for="revSet">Set</label><select id="revSet" class="select-field"></select>' +
-      '<p class="hint" id="revDesc" style="text-align:left"></p>' +
-      '<p class="hint" id="revVer" style="text-align:left"></p>' +
-      '<ol id="revList" class="rev-list"></ol></div>';
+    html += '<div id="dadReview" style="margin-bottom:14px"></div>';
 
     el.innerHTML = html;
-    bindReview();
+    if (global.ColeMathReview) ColeMathReview.mount(document.getElementById('dadReview'), 'dad', 1);
     var rb = document.getElementById('dashRefreshBtn');
     if (rb) rb.onclick = function () { refresh(el); };
     var sb = document.getElementById('dashSwitchBtn');
@@ -142,40 +135,10 @@
     html += '<h4>Skipped twice (latest first)</h4><ul class="hist-list">';
     if (!log.length) html += '<li><span>None yet</span><span></span></li>';
     log.slice(0, 30).forEach(function (r) {
-      html += '<li><span>Set ' + esc(r.set) + ': ' + esc(String(r.prompt).replace(/\n/g, ' ')) + '</span><span>' + esc(String(r.when).slice(0, 10)) + '</span></li>';
+      html += '<li><span>Set ' + esc(r.set) + ': ' + (global.ColeMathFmt ? ColeMathFmt.html(String(r.prompt).replace(/\n/g, ' ')) : esc(r.prompt)) + '</span><span>' + esc(String(r.when).slice(0, 10)) + '</span></li>';
     });
     html += '</ul><p class="hint" style="text-align:left">Scores and skips are saved on the phone Cole practises on, so open Dad on his phone to see them.</p></div>';
     return html;
-  }
-
-  function bindReview() {
-    var setSel = document.getElementById('revSet'), who = document.getElementById('revWho');
-    if (!setSel) return;
-    for (var i = 1; i <= 20; i++) { var o = document.createElement('option'); o.value = String(i); o.textContent = 'Set ' + i; setSel.appendChild(o); }
-    function show() {
-      var n = parseInt(setSel.value, 10), list = document.getElementById('revList'), qs = [];
-      document.getElementById('revDesc').textContent = global.ColeMathGuest ? ColeMathGuest.describe(n) : '';
-      if (who.value === 'cole' && global.ColeMathBank && ColeMathBank.ready()) {
-        qs = ColeMathBank.rows(n).map(function (r) { return { prompt: r.prompt, answer: r.answer }; });
-        document.getElementById('revVer').textContent = qs.length + ' questions from your Sheet (version ' + ColeMathBank.version() + '). Sheet edits show up here after Education bot republishes them.';
-      } else if (global.ColeMathGuest) {
-        var keep = ColeMathGuest.getLevel();
-        ColeMathGuest.setLevel(n);
-        qs = ColeMathGuest.makeSession(50).map(function (q) { return { prompt: q.prompt, answer: q.answer && q.answer.kind === 'qr' ? q.answer.q + ' r ' + q.answer.r : String(q.answer) }; });
-        ColeMathGuest.setLevel(keep);
-        document.getElementById('revVer').textContent = who.value === 'cole' ? 'Sheet questions not loaded yet; showing a generated sample.' : 'Guest questions are generated, so this is one sample.';
-      }
-      list.innerHTML = '';
-      qs.forEach(function (q) {
-        var li = document.createElement('li'), p = document.createElement('div'), a = document.createElement('div');
-        p.className = 'rev-q'; p.textContent = q.prompt;
-        a.className = 'rev-a'; a.textContent = 'Tap to show answer';
-        li.onclick = function () { a.textContent = 'Answer: ' + q.answer; a.className = 'rev-a shown'; };
-        li.appendChild(p); li.appendChild(a); list.appendChild(li);
-      });
-    }
-    setSel.onchange = show; who.onchange = show;
-    show();
   }
 
   function refresh(el) {

@@ -1,5 +1,5 @@
 /* Math Practice — offline service worker (cache-first) */
-var CACHE = 'mp10-v1';
+var CACHE = 'mp10-v2';
 var ASSETS = [
   './',
   './index.html',
@@ -19,6 +19,8 @@ var ASSETS = [
   './js/questions/taya.js',
   './js/questions/guest.js',
   './js/bank.js',
+  './js/fmt.js',
+  './js/review.js',
   './data/bank.json',
   './icons/icon-180.png',
   './icons/icon-192.png',

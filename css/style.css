@@ -200,3 +200,6 @@ a.sheet-link { color: #7CFF9A; font-weight: 700; }
 .rev-q { white-space: pre-line; }
 .rev-a { font-size: 13px; opacity: 0.7; margin-top: 2px; }
 .rev-a.shown { opacity: 1; color: #7CFF9A; font-weight: 700; }
+
+sup { font-size: 0.62em; line-height: 0; position: relative; vertical-align: baseline; top: -0.75em; }
+#screen-review .btn { margin-top: 12px; }
